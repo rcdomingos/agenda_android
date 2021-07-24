@@ -13,34 +13,40 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rcdomingos.agenda.R;
 import com.rcdomingos.agenda.dao.StudentDAO;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class StudentListActivity extends AppCompatActivity {
+    private static final String APPBAR_TITLE = "Lista de Alunos";
+    private final StudentDAO studentDAO = new StudentDAO();
 
-    //subrescrever o metodo na hora da criacao da activity e adicionar comportamentos
-    //Bundle mandar comportamentos para activity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_list);
+        setTitle(APPBAR_TITLE);
 
-        setTitle("Lista de Alunos");
-//        List<String> alunos = new ArrayList<>(Arrays.asList("Alex", "Fran", "Jose"));
+        configFloatButtonAdd();
+    }
+
+    private void configFloatButtonAdd() {
         FloatingActionButton btnNewStudent = findViewById(R.id.activity_student_list_fab_new_student);
         btnNewStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(StudentListActivity.this, StudentFormActivity.class));
+                openFormStudentActivity();
             }
         });
+    }
+
+    private void openFormStudentActivity() {
+        startActivity(new Intent(this, StudentFormActivity.class));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        StudentDAO studentDAO = new StudentDAO();
+        configStudentList();
+    }
+
+    private void configStudentList() {
         ListView stundentList = findViewById(R.id.activity_student_list_listview);
         stundentList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, studentDAO.findAll()));
     }

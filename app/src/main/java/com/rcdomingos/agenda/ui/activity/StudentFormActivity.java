@@ -1,12 +1,10 @@
 package com.rcdomingos.agenda.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.rcdomingos.agenda.R;
@@ -15,35 +13,49 @@ import com.rcdomingos.agenda.model.Student;
 
 public class StudentFormActivity extends AppCompatActivity {
 
+    private EditText fieldName;
+    private EditText fieldPhone;
+    private EditText fieldEmail;
+
+    private static final String APPBAR_TITLE = "Novo Aluno";
+    private final StudentDAO studentDAO = new StudentDAO();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_form);
+        setTitle(APPBAR_TITLE);
 
-        final StudentDAO studentDAO = new StudentDAO();
+        fieldInitialization();
+        configSaveButton();
+    }
 
-        final EditText fieldName = findViewById(R.id.activity_student_form_name);
-        final EditText fieldPhone = findViewById(R.id.activity_student_form_phone);
-        final EditText fieldEmail = findViewById(R.id.activity_student_form_email);
-
-        //botão salvar
+    private void configSaveButton() {
         Button btnSave = findViewById(R.id.activity_student_form_btn_save);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = fieldName.getText().toString();
-                String phone = fieldPhone.getText().toString();
-                String email = fieldEmail.getText().toString();
-                Student student = new Student(name, phone, email);
-
-                studentDAO.save(student);
-
-                //ir para outra activity
-                // startActivity(new Intent(StudentFormActivity.this, StudentListActivity.class));
-
-                //encerrar a activity
-                finish();
-            }
+        btnSave.setOnClickListener((view) -> {
+            Student student = createNewStudent();
+            saveAndFinish(student);
         });
+    }
+
+    private void fieldInitialization() {
+        fieldName = findViewById(R.id.activity_student_form_name);
+        fieldPhone = findViewById(R.id.activity_student_form_phone);
+        fieldEmail = findViewById(R.id.activity_student_form_email);
+    }
+
+    private void saveAndFinish(Student student) {
+        studentDAO.save(student);
+        //encerrar a activity
+        finish();
+    }
+
+    @NonNull
+    private Student createNewStudent() {
+        String name = fieldName.getText().toString();
+        String phone = fieldPhone.getText().toString();
+        String email = fieldEmail.getText().toString();
+        Student student = new Student(name, phone, email);
+        return student;
     }
 }

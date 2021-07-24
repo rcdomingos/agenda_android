@@ -1,5 +1,7 @@
 package com.rcdomingos.agenda.model;
 
+import androidx.annotation.NonNull;
+
 public class Student {
     private final String name;
     private final String phone;
@@ -11,18 +13,7 @@ public class Student {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
+    @NonNull
     @Override
     public String toString() {
         return name;
